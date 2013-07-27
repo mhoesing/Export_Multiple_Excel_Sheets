@@ -5,7 +5,7 @@ Export multiple ACL tables to 1 Excel Workbook, each table into individual sheet
 
 The video at this link will walk through the scripts and discuss Powershell setup.
 
-http://www.wowt.com/ 
+http://unoconnect.adobeconnect.com/p9duor6c6dc/
 
 The Powershell script reads all the .CSV comma separated delimited files in a directory and writes them to separate sheets within one Excel Workbook. The Powershell script is called from the ACL script with the EXECUTE command          
      EXECUTE "powershell.exe %v_powershellpath%Combine_CSVs_Into_1_Workbook.ps1 %v_csvpath% %v_xlsfilename%"
