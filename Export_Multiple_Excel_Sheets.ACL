@@ -1,0 +1,124 @@
+@ACL1000
+^LAYOUT   Belleweather_Ga_TB_12_31_2011      56 D.T,
+Account_ID     ASCII       1   8    
+Account_Description ASCII       9  30    
+Debit_Amt      NUMERIC    39   9 2  
+Credit_Amt     NUMERIC    48   9 2  
+^LAYOUT   Belleweather_Ga_TB_12_31_2012      58 D.T,
+Account_ID     ASCII       1   8    
+Account_Description ASCII       9  30    
+Debit_Amt      NUMERIC    39  10 2  
+Credit_Amt     NUMERIC    49  10 2  
+^LAYOUT   Belleweather_Ga_TB_12_31_2013      58 D.T,
+Account_ID     ASCII       1   8    
+Account_Description ASCII       9  30    
+Debit_Amt      NUMERIC    39  10 2  
+Credit_Amt     NUMERIC    49  10 2  
+^LOGFILE  Export_Multiple_Excel_Sheets        "" "Export_Multiple_Excel_Sheets.LOG"
+[PARENT_FOLDER_ID] 0
+^FORMAT   Belleweather_Ga_TB_12_31_2011      Belleweather_Ga_TB_12_31_2011    "" "Belleweather_Ga_TB_12_31_2011.FIL" 0 ASCII 
+[PARENT_FOLDER_ID] 0
+[LASTVIEW] "Default_View"
+[RETRIEVE] 0
+[REFRESH] EXCEL "C:\Data\Software\ACL_Analytic_10\Belleweather_Ga_TB_12_31_2011.FIL" FROM "C:\Data\Powershell_Library\Belleweather_Gardens_3_yrs_Trial_Balance_ending_2013.xls" TABLE "TB_12_31_2011$" KEEPTITLE
+
+^FORMAT   Belleweather_Ga_TB_12_31_2012      Belleweather_Ga_TB_12_31_2012    "" "Belleweather_Ga_TB_12_31_2012.FIL" 0 ASCII 
+[PARENT_FOLDER_ID] 0
+[LASTVIEW] "Default_View"
+[RETRIEVE] 0
+[REFRESH] EXCEL "C:\Data\Software\ACL_Analytic_10\Belleweather_Ga_TB_12_31_2012.FIL" FROM "C:\Data\Powershell_Library\Belleweather_Gardens_3_yrs_Trial_Balance_ending_2013.xls" TABLE "TB_12_31_2012$" KEEPTITLE
+
+^FORMAT   Belleweather_Ga_TB_12_31_2013      Belleweather_Ga_TB_12_31_2013    "" "Belleweather_Ga_TB_12_31_2013.FIL" 0 ASCII 
+[PARENT_FOLDER_ID] 0
+[LASTVIEW] "Default_View"
+[RETRIEVE] 0
+[REFRESH] EXCEL "C:\Data\Software\ACL_Analytic_10\Belleweather_Ga_TB_12_31_2013.FIL" FROM "C:\Data\Powershell_Library\Belleweather_Gardens_3_yrs_Trial_Balance_ending_2013.xls" TABLE "TB_12_31_2013$" KEEPTITLE
+
+^BATCH    Create_The_Powershell_Script       
+[PARENT_FOLDER_ID] 0
+COMMENT ***** Create a generic table containing the list of ACL projects, we have to have a table
+COMMENT ***** open to use the LIST command
+DIR "*.ACL" TO T_FMT SUPPRESS
+OPEN T_FMT
+
+COMMENT ***** Create the powershell script in the specified directory
+LIST UNFORMATTED "# Powershell script to list the .CSV files in a directory and place them all into one Excel Workbook"            TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+
+LIST UNFORMATTED "[CmdletBinding()] "                                   APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "Param (           "                                   APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "    [Parameter(Mandatory=$true,Position=0)] "         APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "    [string]$csvfilepath, "                           APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "    [Parameter(Mandatory=$true,Position=1)]"          APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "    [string]$outputfilename"                          APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED ")"                                                    APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED " "                                                    APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+
+LIST UNFORMATTED "$csvs = Get-ChildItem $csvfilepath* -Include *.csv"         APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED " $y=$csvs.Count"                                            APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED " Write-Host 'Detected the following CSV files: ($y)'"       APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED " foreach ($csv in $csvs)"                                   APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "  {"                                                        APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "    Write-Host ” “$csv.Name"                                APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "  }"                                                        APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED "Write-Host 'Patience, this is a Windows process, not ACL.'" APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED " "                                                          APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+
+LIST UNFORMATTED " $Excel = New-Object -ComObject 'Excel.Application' "                APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1 
+LIST UNFORMATTED " $Excel.Visible = $false            #Runs Excel in the background. " APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $Excel.DisplayAlerts = $false      #Supress alert messages. "       APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $Excel.sheetsInNewWorkbook = $csvs.Count"                           APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $xlsx = $Excel.Workbooks.Add()"                                     APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $sheet=1"                                                           APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " "                                                                   APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+  
+LIST UNFORMATTED "foreach ($csv in $csvs) "                             APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " { "                                                  APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $row=1 "                                             APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $column=1 "                                          APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $worksheet = $xlsx.Worksheets.Item($sheet) "         APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $worksheet.Name = $csv.Name "                        APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $file = (Get-Content $csv) "                         APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " foreach($line in $file) "                            APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " { "                                                  APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $linecontents=$line -split ‘,(?!\s*\w+”)’ "          APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED "foreach($cell in $linecontents) "                     APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " { "                                                  APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $worksheet.Cells.Item($row,$column) = $cell "        APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $column++ "                                          APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " } "                                                  APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $column=1"                                           APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $row++ "                                             APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " } "                                                  APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " $sheet++ "                                           APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+LIST UNFORMATTED " } "                                                  APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+
+
+LIST UNFORMATTED "$xlsx.SaveAs($csvfilepath + $outputfilename)"         APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+
+LIST UNFORMATTED "$Excel.Quit() "                                       APPEND TO "%v_powershellpath%Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+
+^BATCH    Combine_CSV_files_in_1_workbook    
+[PARENT_FOLDER_ID] 0
+COMMENT ***** Set up the environment
+SET SAFETY OFF
+DELETE ALL OK
+
+COMMENT ***** Define the directory for the results CSV files and the name of the combined file, and the location of the Powershell script
+ASSIGN v_powershellpath = "C:\Data\Powershell_Library\"
+ASSIGN v_csvpath        = "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\"
+ASSIGN v_xlsfilename    = "Combined_Trial_Balances"
+
+
+COMMENT ***** Create the individual CSV delimited results files all in the same directory
+OPEN Belleweather_Ga_TB_12_31_2011
+EXPORT FIELDS ALL DELIMITED TO "%v_csvpath%TB_12_31_2011.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+OPEN Belleweather_Ga_TB_12_31_2012
+EXPORT FIELDS ALL DELIMITED TO "%v_csvpath%TB_12_31_2012.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+OPEN Belleweather_Ga_TB_12_31_2013
+EXPORT FIELDS ALL DELIMITED TO "%v_csvpath%TB_12_31_2013.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+
+DO SCRIPT Create_The_Powershell_Script
+
+EXECUTE "powershell.exe %v_powershellpath%Combine_CSVs_Into_1_Workbook.ps1 %v_csvpath% %v_xlsfilename%"
+
+^OPEN 

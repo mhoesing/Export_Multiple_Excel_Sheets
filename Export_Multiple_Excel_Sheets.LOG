@@ -1,0 +1,652 @@
+@@ Log File C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\Export_Multiple_Excel_Sheets.LOG Opened at $$51f2f1cb 17:01:47 on 07/26/2013  
+@ DO Combine_CSV_files_in_1_workbook
+17:04:58 - 07/26/2013  
+@ COMMENT ***** Set up the environment
+17:04:58 - 07/26/2013  
+@ SET SAFETY OFF
+17:04:58 - 07/26/2013  
+@ DELETE ALL OK
+17:04:58 - 07/26/2013  
+
+@ COMMENT ***** Define the directory for the results CSV files and the name of the combined file, and the location of the Powershell script
+17:04:58 - 07/26/2013  
+@ ASSIGN v_powershellpath = "C:\Data\Powershell_Library\"
+17:04:58 - 07/26/2013  
+@ ASSIGN v_csvpath        = "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\"
+17:04:58 - 07/26/2013  
+@ ASSIGN v_xlsfilename    = "Combined_Trial_Balances"
+17:04:58 - 07/26/2013  
+
+
+@ COMMENT ***** Create the individual CSV delimited results files all in the same directory
+17:04:58 - 07/26/2013  
+@ OPEN Belleweather_Ga_TB_12_31_2011
+17:04:58 - 07/26/2013  
+4 fields activated
+Opening file name Belleweather_Ga_TB_12_31_2011.FIL as supplied in the table layout.
+@ EXPORT FIELDS ALL DELIMITED TO "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2011.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+17:04:58 - 07/26/2013  
+  80 of 82 met the test: NOT ISBLANK(Account_ID)
+80 records produced
+Output to C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2011.csv is done
+@ OPEN Belleweather_Ga_TB_12_31_2012
+17:04:58 - 07/26/2013  
+4 fields activated
+Opening file name Belleweather_Ga_TB_12_31_2012.FIL as supplied in the table layout.
+@ EXPORT FIELDS ALL DELIMITED TO "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2012.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+17:04:58 - 07/26/2013  
+  80 of 83 met the test: NOT ISBLANK(Account_ID)
+80 records produced
+Output to C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2012.csv is done
+@ OPEN Belleweather_Ga_TB_12_31_2013
+17:04:58 - 07/26/2013  
+4 fields activated
+Opening file name Belleweather_Ga_TB_12_31_2013.FIL as supplied in the table layout.
+@ EXPORT FIELDS ALL DELIMITED TO "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2013.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+17:04:58 - 07/26/2013  
+  81 of 84 met the test: NOT ISBLANK(Account_ID)
+81 records produced
+Output to C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2013.csv is done
+
+@ DO SCRIPT Create_The_Powershell_Script
+17:04:58 - 07/26/2013  
+@ COMMENT ***** Create a generic table containing the list of ACL projects, we have to have a table
+17:04:58 - 07/26/2013  
+@ COMMENT ***** open to use the LIST command
+17:04:58 - 07/26/2013  
+@ DIR "*.ACL" TO T_FMT SUPPRESS
+17:04:58 - 07/26/2013  
+1 files listed
+
+@ OPEN T_FMT
+17:04:58 - 07/26/2013  
+9 fields activated
+Opening file name T_FMT.FIL as supplied in the table layout.
+
+@ COMMENT ***** Create the powershell script in the specified directory
+17:04:58 - 07/26/2013  
+@ LIST UNFORMATTED "# Powershell script to list the .CSV files in a directory and place them all into one Excel Workbook"            TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "[CmdletBinding()] "                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "Param (           "                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [Parameter(Mandatory=$true,Position=0)] "         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [string]$csvfilepath, "                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [Parameter(Mandatory=$true,Position=1)]"          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [string]$outputfilename"                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED ")"                                                    APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " "                                                    APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "$csvs = Get-ChildItem $csvfilepath* -Include *.csv"         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $y=$csvs.Count"                                            APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " Write-Host 'Detected the following CSV files: ($y)'"       APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " foreach ($csv in $csvs)"                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "  {"                                                        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    Write-Host ” “$csv.Name"                                APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "  }"                                                        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "Write-Host 'Patience, this is a Windows process, not ACL.'" APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " "                                                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED " $Excel = New-Object -ComObject 'Excel.Application' "                APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $Excel.Visible = $false            #Runs Excel in the background. " APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $Excel.DisplayAlerts = $false      #Supress alert messages. "       APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $Excel.sheetsInNewWorkbook = $csvs.Count"                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $xlsx = $Excel.Workbooks.Add()"                                     APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $sheet=1"                                                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " "                                                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "foreach ($csv in $csvs) "                             APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " { "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $row=1 "                                             APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $column=1 "                                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $worksheet = $xlsx.Worksheets.Item($sheet) "         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $worksheet.Name = $csv.Name "                        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $file = (Get-Content $csv) "                         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " foreach($line in $file) "                            APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " { "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $linecontents=$line -split ‘,(?!\s*\w+”)’ "          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "foreach($cell in $linecontents) "                     APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " { "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $worksheet.Cells.Item($row,$column) = $cell "        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $column++ "                                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " } "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $column=1"                                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $row++ "                                             APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " } "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $sheet++ "                                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " } "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+
+@ LIST UNFORMATTED "$xlsx.SaveAs($csvfilepath + $outputfilename)"         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "$Excel.Quit() "                                       APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:04:58 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ COMMENT - Execution of Create_The_Powershell_Script  completed
+17:04:58 - 07/26/2013  
+
+@ EXECUTE "powershell.exe C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.ps1 C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\ Combined_Trial_Balances"
+17:04:58 - 07/26/2013  
+EXECUTE "powershell.exe C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.ps1 C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\ Combined_Trial_Balances"
+Application return code : 0.
+
+@ COMMENT - Execution of Combine_CSV_files_in_1_workbook completed
+17:06:14 - 07/26/2013  
+@ CLOSE
+17:07:41 - 07/26/2013  
+@ DO Combine_CSV_files_in_1_workbook
+17:07:41 - 07/26/2013  
+@ COMMENT ***** Set up the environment
+17:07:41 - 07/26/2013  
+@ SET SAFETY OFF
+17:07:41 - 07/26/2013  
+@ DELETE ALL OK
+17:07:41 - 07/26/2013  
+
+@ COMMENT ***** Define the directory for the results CSV files and the name of the combined file, and the location of the Powershell script
+17:07:41 - 07/26/2013  
+@ ASSIGN v_powershellpath = "C:\Data\Powershell_Library\"
+17:07:41 - 07/26/2013  
+@ ASSIGN v_csvpath        = "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\"
+17:07:41 - 07/26/2013  
+@ ASSIGN v_xlsfilename    = "Combined_Trial_Balances"
+17:07:41 - 07/26/2013  
+
+
+@ COMMENT ***** Create the individual CSV delimited results files all in the same directory
+17:07:41 - 07/26/2013  
+@ OPEN Belleweather_Ga_TB_12_31_2011
+17:07:41 - 07/26/2013  
+4 fields activated
+Opening file name Belleweather_Ga_TB_12_31_2011.FIL as supplied in the table layout.
+@ EXPORT FIELDS ALL DELIMITED TO "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2011.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+17:07:41 - 07/26/2013  
+  80 of 82 met the test: NOT ISBLANK(Account_ID)
+80 records produced
+Output to C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2011.csv is done
+@ OPEN Belleweather_Ga_TB_12_31_2012
+17:07:41 - 07/26/2013  
+4 fields activated
+Opening file name Belleweather_Ga_TB_12_31_2012.FIL as supplied in the table layout.
+@ EXPORT FIELDS ALL DELIMITED TO "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2012.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+17:07:41 - 07/26/2013  
+  80 of 83 met the test: NOT ISBLANK(Account_ID)
+80 records produced
+Output to C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2012.csv is done
+@ OPEN Belleweather_Ga_TB_12_31_2013
+17:07:41 - 07/26/2013  
+4 fields activated
+Opening file name Belleweather_Ga_TB_12_31_2013.FIL as supplied in the table layout.
+@ EXPORT FIELDS ALL DELIMITED TO "C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2013.csv" KEEPTITLE SEPARATOR "," QUALIFIER '' IF NOT ISBLANK(Account_ID)
+17:07:41 - 07/26/2013  
+  81 of 84 met the test: NOT ISBLANK(Account_ID)
+81 records produced
+Output to C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\TB_12_31_2013.csv is done
+
+@ DO SCRIPT Create_The_Powershell_Script
+17:07:41 - 07/26/2013  
+@ COMMENT ***** Create a generic table containing the list of ACL projects, we have to have a table
+17:07:41 - 07/26/2013  
+@ COMMENT ***** open to use the LIST command
+17:07:41 - 07/26/2013  
+@ DIR "*.ACL" TO T_FMT SUPPRESS
+17:07:41 - 07/26/2013  
+1 files listed
+
+@ OPEN T_FMT
+17:07:41 - 07/26/2013  
+9 fields activated
+Opening file name T_FMT.FIL as supplied in the table layout.
+
+@ COMMENT ***** Create the powershell script in the specified directory
+17:07:41 - 07/26/2013  
+@ LIST UNFORMATTED "# Powershell script to list the .CSV files in a directory and place them all into one Excel Workbook"            TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "[CmdletBinding()] "                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "Param (           "                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [Parameter(Mandatory=$true,Position=0)] "         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [string]$csvfilepath, "                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [Parameter(Mandatory=$true,Position=1)]"          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    [string]$outputfilename"                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED ")"                                                    APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " "                                                    APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "$csvs = Get-ChildItem $csvfilepath* -Include *.csv"         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $y=$csvs.Count"                                            APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " Write-Host 'Detected the following CSV files: ($y)'"       APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " foreach ($csv in $csvs)"                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "  {"                                                        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "    Write-Host ” “$csv.Name"                                APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "  }"                                                        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "Write-Host 'Patience, this is a Windows process, not ACL.'" APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " "                                                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED " $Excel = New-Object -ComObject 'Excel.Application' "                APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $Excel.Visible = $false            #Runs Excel in the background. " APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $Excel.DisplayAlerts = $false      #Supress alert messages. "       APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $Excel.sheetsInNewWorkbook = $csvs.Count"                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $xlsx = $Excel.Workbooks.Add()"                                     APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $sheet=1"                                                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " "                                                                   APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "foreach ($csv in $csvs) "                             APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " { "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $row=1 "                                             APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $column=1 "                                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $worksheet = $xlsx.Worksheets.Item($sheet) "         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $worksheet.Name = $csv.Name "                        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $file = (Get-Content $csv) "                         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " foreach($line in $file) "                            APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " { "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $linecontents=$line -split ‘,(?!\s*\w+”)’ "          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED "foreach($cell in $linecontents) "                     APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " { "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $worksheet.Cells.Item($row,$column) = $cell "        APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $column++ "                                          APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " } "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $column=1"                                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $row++ "                                             APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " } "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " $sheet++ "                                           APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+@ LIST UNFORMATTED " } "                                                  APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+
+@ LIST UNFORMATTED "$xlsx.SaveAs($csvfilepath + $outputfilename)"         APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ LIST UNFORMATTED "$Excel.Quit() "                                       APPEND TO "C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1" IF RECNO() = 1
+17:07:41 - 07/26/2013  
+  1 of 1 met the test: RECNO() = 1
+1 records produced
+Output to C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.PS1 is done
+
+@ COMMENT - Execution of Create_The_Powershell_Script  completed
+17:07:41 - 07/26/2013  
+
+@ EXECUTE "powershell.exe C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.ps1 C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\ Combined_Trial_Balances"
+17:07:41 - 07/26/2013  
+EXECUTE "powershell.exe C:\Data\Powershell_Library\Combine_CSVs_Into_1_Workbook.ps1 C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\ Combined_Trial_Balances"
+Application return code : 0.
+
+@ COMMENT - Execution of Combine_CSV_files_in_1_workbook completed
+17:08:57 - 07/26/2013  
+@ CLOSE
+17:10:13 - 07/26/2013  
+@@ Log File C:\ACL_Data\Testing_Analytics_10\Export_Multiple_Excel_Sheets\Export_Multiple_Excel_Sheets.LOG Opened at $$51f3537a 23:58:34 on 07/26/2013  
+@ OPEN T_FMT
+23:58:34 - 07/26/2013  
+9 fields activated
+Opening file name T_FMT.FIL as supplied in the table layout.
+@ CLOSE
+23:58:37 - 07/26/2013  
+@ DELETE FORMAT T_FMT OK
+23:58:40 - 07/26/2013  
