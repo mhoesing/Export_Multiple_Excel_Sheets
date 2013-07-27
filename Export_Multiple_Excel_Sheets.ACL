@@ -121,4 +121,6 @@ DO SCRIPT Create_The_Powershell_Script
 
 EXECUTE "powershell.exe %v_powershellpath%Combine_CSVs_Into_1_Workbook.ps1 %v_csvpath% %v_xlsfilename%"
 
+SET SAFETY ON
+DISPLAY VARIABLES
 ^OPEN 
